@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../src/app";
 
-describe("POST /auth/login", () => {
+describe("POST /api/auth/login", () => {
     // Test case for user login
     it("should login an existing user", async () => {
         const email = `test${Date.now()}@test.com`;
@@ -9,7 +9,7 @@ describe("POST /auth/login", () => {
 
         // First, register the user
         await request(app)
-            .post("/auth/register")
+            .post("/api/auth/register")
             .send({
                 email: email,
                 password: password
@@ -17,7 +17,7 @@ describe("POST /auth/login", () => {
 
         // Then, attempt to login
         const response = await request(app)
-            .post("/auth/login").send({
+            .post("/api/auth/login").send({
                 email: email,
                 password: password,
             });
@@ -33,7 +33,7 @@ describe("POST /auth/login", () => {
 
         // First, register the user
         await request(app)
-            .post("/auth/register")
+            .post("/api/auth/register")
             .send({
                 email: email,
                 password: password
@@ -41,7 +41,7 @@ describe("POST /auth/login", () => {
 
         // Then, attempt to login with wrong password
         const response = await request(app)
-            .post("/auth/login").send({
+            .post("/api/auth/login").send({
                 email: email,
                 password: "wrongpassword",
             });

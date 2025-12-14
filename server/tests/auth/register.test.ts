@@ -3,13 +3,13 @@ import app from "../../src/app";
  
 
 
-describe("POST /auth/register", () => {
+describe("POST /api/auth/register", () => {
     // Test case for user registration
     
     it("should register a new user", async () => {
         const email = `test${Date.now()}@test.com`;
         const response = await request(app)
-            .post("/auth/register")
+            .post("/api/auth/register")
             .send({
                 email: email,
                 password: "password123"
@@ -23,14 +23,14 @@ describe("POST /auth/register", () => {
     it("should return 400 if same email is used", async ()=>{
 
         const email = `test${Date.now()}@test.com`;
-        await request(app).post("/auth/register")
+        await request(app).post("/api/auth/register")
             .send({
                 email:email,
                 password: "password123"
             })
 
         
-        const response = await request(app).post("/auth/register")
+        const response = await request(app).post("/api/auth/register")
             .send({
                 email: email,
                 password: "password123"
