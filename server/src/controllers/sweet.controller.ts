@@ -115,3 +115,46 @@ export const searchSweets = async (req: Request, res: Response) => {
 };
 
 
+export const purchaseSweet = async (req: Request, res: Response) => {
+  try {
+    const sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    if (sweet.quantity <= 0) {
+      return res.status(400).json({ message: "Sweet out of stock" });
+    }
+
+    sweet.quantity -= 1;
+    await sweet.save();
+
+    return res.status(200).json(sweet);
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid sweet id" });
+  }
+};
+
+export const restockSweet = async (req: Request, res: Response) => {
+  try {
+    const { quantity } = req.body;
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: "Invalid restock quantity" });
+    }
+
+    const sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    sweet.quantity += quantity;
+    await sweet.save();
+
+    return res.status(200).json(sweet);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
