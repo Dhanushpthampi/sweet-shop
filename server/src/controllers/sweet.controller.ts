@@ -86,3 +86,32 @@ export const deleteSweet = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid sweet id" });
   }
 };
+
+export const searchSweets = async (req: Request, res: Response) => {
+  try {
+    const { name, category, minPrice, maxPrice } = req.query;
+
+    const filter: any = {};
+
+    if (name) {
+      filter.name = { $regex: name, $options: "i" };
+    }
+
+    if (category) {
+      filter.category = { $regex: category, $options: "i" };
+    }
+
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    const sweets = await Sweet.find(filter);
+    return res.status(200).json(sweets);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
