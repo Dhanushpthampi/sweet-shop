@@ -45,3 +45,29 @@ export const getSweets = async (_req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+
+export const updateSweet = async (req: Request, res: Response) => {
+  try {
+    const sweet = await Sweet.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      {
+        new: true,
+        runValidators: true,
+        context: "query",
+      }
+    );
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    return res.status(200).json(sweet);
+  } catch (error) {
+    console.error(error); // keep for now
+    return res.status(400).json({ message: "Invalid update data" });
+  }
+};
+
