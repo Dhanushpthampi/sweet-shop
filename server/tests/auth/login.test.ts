@@ -1,17 +1,52 @@
 import request from "supertest";
 import app from "../../src/app";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
 
-dotenv.config();
+describe("POST /auth/login", () => {
+    // Test case for user login
+    it("should login an existing user", async () => {
+        const email = `test${Date.now()}@test.com`;
+        const password = "password123";
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI as string);
+        // First, register the user
+        await request(app)
+            .post("/auth/register")
+            .send({
+                email: email,
+                password: password
+            });
+
+        // Then, attempt to login
+        const response = await request(app)
+            .post("/auth/login").send({
+                email: email,
+                password: password,
+            });
+
+
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveProperty("token");
+    });
+
+    it("should not accept wrong password", async () => {
+        const email = `test${Date.now()}@test.com`;
+        const password = "password123";
+
+        // First, register the user
+        await request(app)
+            .post("/auth/register")
+            .send({
+                email: email,
+                password: password
+            });
+
+        // Then, attempt to login with wrong password
+        const response = await request(app)
+            .post("/auth/login").send({
+                email: email,
+                password: "wrongpassword",
+            });
+
+        expect(response.status).toBe(401);
+    });
 });
-
-
-
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+ 

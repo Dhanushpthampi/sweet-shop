@@ -1,14 +1,6 @@
 import request from "supertest";
 import app from "../../src/app";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI as string);
-});
-
+ 
 
 
 describe("POST /auth/register", () => {
@@ -49,7 +41,4 @@ describe("POST /auth/register", () => {
 
 })
 
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+ 
