@@ -7,10 +7,12 @@ import { deleteSweet } from '../controllers/sweet.controller';
 const router = Router();
 
 router.get('/',authMiddleware, getSweets);
+router.get('/search',authMiddleware, searchSweets);
 router.post('/',authMiddleware,adminMiddleware, createSweet);
+
 router.put('/:id',authMiddleware,adminMiddleware, updateSweet);
 router.delete('/:id',authMiddleware,adminMiddleware,deleteSweet);
-router.get('/search',authMiddleware, searchSweets);
+
 router.post("/:id/purchase", authMiddleware, purchaseSweet);
 router.post('/:id/restock', authMiddleware, adminMiddleware,restockSweet);   
 
