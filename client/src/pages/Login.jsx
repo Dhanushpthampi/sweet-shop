@@ -34,7 +34,7 @@ export default function Login() {
       <div className="auth-info slide-in-left">
         <div>
           <h1 style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>
-            Kata
+           Kata
           </h1>
           <div className="gold-line"></div>
           <p style={{ fontSize: "1.2rem", color: "var(--text-secondary)", marginBottom: "2rem", lineHeight: "1.8" }}>

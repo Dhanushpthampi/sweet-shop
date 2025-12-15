@@ -93,12 +93,13 @@ export const searchSweets = async (req: Request, res: Response) => {
 
     const filter: any = {};
 
-    if (name) {
-      filter.name = { $regex: name, $options: "i" };
-    }
-
-    if (category) {
-      filter.category = { $regex: category, $options: "i" };
+    // If searching by text (name or category), use OR logic to search both fields
+    if (name || category) {
+      const searchTerm = (name || category) as string;
+      filter.$or = [
+        { name: { $regex: searchTerm, $options: "i" } },
+        { category: { $regex: searchTerm, $options: "i" } }
+      ];
     }
 
     if (minPrice || maxPrice) {

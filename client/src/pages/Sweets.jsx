@@ -4,34 +4,48 @@ import Navbar from "../components/Navbar";
 
 export default function Sweets() {
   const [sweets, setSweets] = useState([]);
+  const [allSweets, setAllSweets] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [typingTimeout, setTypingTimeout] = useState(null);
 
   const loadAll = async () => {
     try {
       const res = await api.get("/sweets");
       setSweets(res.data);
+      setAllSweets(res.data);
     } catch (e) {
       console.error(e);
     }
   };
 
-  const smartSearch = async (value) => {
-    if (!value.trim()) {
+  const smartSearch = async (value, category = selectedCategory) => {
+    if (!value.trim() && !category) {
       loadAll();
       return;
     }
 
     const params = {};
 
-    if (value.includes("-")) {
-      const [min, max] = value.split("-");
-      params.minPrice = min;
-      params.maxPrice = max;
-    } else if (!isNaN(value)) {
-      params.minPrice = value;
-    } else {
-      params.name = value;
+    // If category filter is active, search by category only
+    if (category) {
+      params.category = category;
+      if (value.trim()) {
+        // If there's also a search term, add it
+        params.name = value;
+      }
+    } else if (value.trim()) {
+      // No category filter - check if search is price-based or text
+      if (value.includes("-")) {
+        const [min, max] = value.split("-");
+        params.minPrice = min;
+        params.maxPrice = max;
+      } else if (!isNaN(value)) {
+        params.minPrice = value;
+      } else {
+        // For text search, backend will search both name AND category with OR logic
+        params.name = value;
+      }
     }
 
     try {
@@ -52,7 +66,7 @@ export default function Sweets() {
     setTypingTimeout(timeout);
 
     return () => clearTimeout(timeout);
-  }, [search]);
+  }, [search, selectedCategory]);
 
   const purchase = async (id) => {
     try {
@@ -63,6 +77,20 @@ export default function Sweets() {
       alert("❌ Purchase failed.");
     }
   };
+
+  const filterByCategory = (category) => {
+    setSelectedCategory(category);
+    setSearch(""); // Clear search when filtering by category
+    if (category) {
+      const filtered = allSweets.filter(s => s.category === category);
+      setSweets(filtered);
+    } else {
+      setSweets(allSweets);
+    }
+  };
+
+  // Get unique categories
+  const categories = [...new Set(allSweets.map(s => s.category))].filter(Boolean);
 
   useEffect(() => {
     loadAll();
@@ -84,7 +112,7 @@ export default function Sweets() {
           Premium Handcrafted Sweets
         </p>
         
-        {/* Centered Search Bar - text NOT centered */}
+        {/* Centered Search Bar */}
         <div style={{ 
           maxWidth: "600px", 
           margin: "0 auto",
@@ -111,6 +139,85 @@ export default function Sweets() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+
+        {/* Category Filter Tags */}
+        {categories.length > 0 && (
+          <div style={{ 
+            display: "flex", 
+            flexWrap: "wrap", 
+            gap: "0.75rem", 
+            justifyContent: "center",
+            marginTop: "2rem",
+            maxWidth: "800px",
+            margin: "2rem auto 0"
+          }}>
+            <button
+              onClick={() => filterByCategory("")}
+              style={{
+                background: selectedCategory === "" ? "var(--gold)" : "transparent",
+                color: selectedCategory === "" ? "var(--black)" : "var(--gold)",
+                border: "2px solid var(--gold)",
+                borderRadius: "0",
+                padding: "8px 20px",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                transition: "all 0.3s ease",
+                fontFamily: "inherit"
+              }}
+              onMouseEnter={e => {
+                if (selectedCategory !== "") {
+                  e.currentTarget.style.background = "var(--gold)";
+                  e.currentTarget.style.color = "var(--black)";
+                }
+              }}
+              onMouseLeave={e => {
+                if (selectedCategory !== "") {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--gold)";
+                }
+              }}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => filterByCategory(cat)}
+                style={{
+                  background: selectedCategory === cat ? "var(--gold)" : "transparent",
+                  color: selectedCategory === cat ? "var(--black)" : "var(--gold)",
+                  border: "2px solid var(--gold)",
+                  borderRadius: "0",
+                  padding: "8px 20px",
+                  cursor: "pointer",
+                  fontSize: "0.9rem",
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  transition: "all 0.3s ease",
+                  fontFamily: "inherit"
+                }}
+                onMouseEnter={e => {
+                  if (selectedCategory !== cat) {
+                    e.currentTarget.style.background = "var(--gold)";
+                    e.currentTarget.style.color = "var(--black)";
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (selectedCategory !== cat) {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "var(--gold)";
+                  }
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Products Grid */}
