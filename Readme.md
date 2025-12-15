@@ -1,15 +1,29 @@
-# 🍬 Sweet Shop Management System – Backend
+# 🍬 Sweet Shop Management System 
+
+## 🌐 Live Demo
+**[Visit Kata Sweet Shop →](https://kata-sweet.vercel.app/)**
+
+---
 
 ## 📌 Project Overview
 
-This project is a **Sweet Shop Management System backend** built as part of a **Test-Driven Development (TDD) Kata**. The goal is to design, implement, and test a robust RESTful API that manages users, authentication, sweets inventory, and purchasing workflows.
+This project is a **Full-Stack Sweet Shop Management System** built as part of a **Test-Driven Development (TDD) Kata**. The application features a modern React frontend and a robust RESTful API backend that manages users, authentication, sweets inventory, and purchasing workflows.
 
-The backend is implemented using **Node.js, TypeScript, Express, MongoDB**, and follows **clean code principles**, **SOLID design**, and **TDD practices**.
+The system includes both **customer-facing shopping features** and an **admin dashboard** for inventory management, with role-based access control and comprehensive testing.
 
 ---
 
 ## 🛠 Tech Stack
 
+### Frontend
+* **Framework:** React 19
+* **Build Tool:** Vite
+* **Routing:** React Router DOM v7
+* **HTTP Client:** Axios
+* **Styling:** CSS Modules
+* **Deployment:** Vercel
+
+### Backend
 * **Runtime:** Node.js
 * **Language:** TypeScript
 * **Framework:** Express.js
@@ -19,7 +33,41 @@ The backend is implemented using **Node.js, TypeScript, Express, MongoDB**, and 
 * **Dev Tools:** Nodemon, ts-node
 
 ---
+## 📸 Application Screenshots PC
 
+### 🔐 Authentication 
+![Login](./screenshots/login.png)
+![Register](./screenshots/register.png)
+
+### 🍬 Sweets Listing
+![Sweets](./screenshots/sweets.png)
+
+### 🛠️ Admin Dashboard
+![Admin](./screenshots/admin.png)
+
+
+## 📸 Application Screenshots Mobile
+
+### 🔐 Authentication 
+![Login](./screenshots/login-mobile.png)
+ 
+
+### 🍬 Sweets Listing
+![Sweets](./screenshots/sweets-mobile.png)
+
+### 🛠️ Admin Dashboard
+![Admin](./screenshots/admin-mobile.png)
+
+
+---
+### Admin Credentials
+```
+Email: admin@admin.com
+Password: secretPassword
+```
+
+
+---
 ## 🔐 Authentication & Roles
 
 * Users can **register** and **log in**
@@ -87,22 +135,33 @@ Tests are written using **Jest** and **Supertest**.
 
 ## ⚙️ Setup & Run Locally
 
+### Prerequisites
+- Node.js (v16 or higher)
+- MongoDB (local or MongoDB Atlas)
+- npm or yarn
+
 ### 1️⃣ Clone the repository
 
 ```bash
 git clone <repo-url>
-cd sweet-shop-backend
+cd sweet-shop
 ```
 
-### 2️⃣ Install dependencies
+### 2️⃣ Backend Setup
 
+#### Navigate to server directory
+```bash
+cd server
+```
+
+#### Install dependencies
 ```bash
 npm install
 ```
 
-### 3️⃣ Environment Variables
+#### Environment Variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the server directory:
 
 ```env
 MONGO_URI=<your-mongodb-connection-string>
@@ -110,17 +169,69 @@ JWT_SECRET=your_jwt_secret
 PORT=3000
 ```
 
-### 4️⃣ Run the server
+#### Run the backend server
 
 ```bash
 npm run dev
 ```
 
-### 5️⃣ Run tests
+The backend will run on `http://localhost:3000`
+
+#### Run backend tests
 
 ```bash
 npm test
 ```
+
+### 3️⃣ Frontend Setup
+
+#### Navigate to client directory
+```bash
+cd client
+```
+
+#### Install dependencies
+```bash
+npm install
+```
+
+#### Environment Variables (Optional)
+
+Create a `.env` file in the client directory if needed:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+#### Run the frontend development server
+
+```bash
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173`
+
+#### Build for production
+
+```bash
+npm run build
+```
+
+---
+
+## 🚀 Features
+
+### For Customers
+* Browse available sweets with search functionality
+* View sweet details including name, category, price, and quantity
+* Purchase sweets (automatically updates inventory)
+* Secure authentication and user registration
+
+### For Admins
+* Full inventory management dashboard
+* Create, update, and delete sweets
+* Restock inventory items
+* View and manage all sweets in the system
 
 ---
 
@@ -187,6 +298,7 @@ From the project root:
 cd server
 npm test
 ```
+
 
 test result ::
 ```bash
