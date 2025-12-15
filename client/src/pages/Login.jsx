@@ -1,12 +1,11 @@
 import { useState } from "react";
-import api from "../api/api";
-import { Link } from "react-router-dom";
-
+import api from "../api/api"; 
+import { Link, useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate(); 
   const submit = async () => {
     try {
       setLoading(true);
@@ -17,11 +16,18 @@ export default function Login() {
 
       const payload = JSON.parse(atob(token.split(".")[1]));
 
-      if (payload.role === "ADMIN") {
-        window.location.href = "/admin";
-      } else {
-        window.location.href = "/sweets";
-      }
+try {
+  const payload = JSON.parse(atob(token.split(".")[1]));
+
+  if (payload.role === "ADMIN") {
+    navigate("/admin");
+  } else {
+    navigate("/sweets");
+  }
+} catch {
+  localStorage.removeItem("token");
+  alert("Invalid session. Please login again.");
+}
     } catch (error) {
       alert("Login failed. Please check your credentials.");
       setLoading(false);
